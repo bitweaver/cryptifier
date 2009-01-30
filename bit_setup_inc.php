@@ -30,6 +30,8 @@ if( $gBitSystem->isPackageActive( 'cryptifier' ) ) {
 
 	function cryptifier_content_edit( &$pObject ) {
 		global $gBitSystem, $gBitSmarty;
+		$pObject->verifyUserPermission( 'p_cryptifier_encrypt_content' );
+
 		if( $pObject->getPreference( 'cryptifier_cipher' ) ) {
 			if( !isset( $_REQUEST['cryptifier_cipher_key'] ) ) {
 				$gBitSmarty->assign_by_ref( 'gCryptContent', $pObject );

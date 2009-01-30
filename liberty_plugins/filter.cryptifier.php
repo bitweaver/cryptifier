@@ -1,6 +1,6 @@
 <?php
 /**
- * @version  $Header: /cvsroot/bitweaver/_bit_cryptifier/liberty_plugins/filter.cryptifier.php,v 1.2 2009/01/30 17:21:02 spiderr Exp $
+ * @version  $Header: /cvsroot/bitweaver/_bit_cryptifier/liberty_plugins/filter.cryptifier.php,v 1.3 2009/01/30 17:49:54 spiderr Exp $
  * @package  liberty
  * @subpackage plugins_filter
  */
@@ -56,7 +56,11 @@ function cryptifier_prefilter( &$pData, &$pFilterHash, $pObject ) {
 
 	if( $pObject->getPreference( 'cryptifier_cipher' ) ) {
 		if( !empty( $_REQUEST['cryptifier_cipher_key'] ) ) {
-			$pData = cryptifier_decrypt_data( $pData, $pObject->getPreference( 'cryptifier_cipher' ), $_REQUEST['cryptifier_cipher_key'], $pObject->getPreference( 'cryptifier_iv' ) );			
+			if( $pObject->hasUserPermission( 'p_cryptifier_decrypt_content' ) ) {
+				$pData = cryptifier_decrypt_data( $pData, $pObject->getPreference( 'cryptifier_cipher' ), $_REQUEST['cryptifier_cipher_key'], $pObject->getPreference( 'cryptifier_iv' ) );			
+			} else {
+				$pData = tra( 'You do not have permission to decrypt data.' );
+			}
 		} else {
 			$pData = '';
 		}
@@ -66,6 +70,7 @@ function cryptifier_prefilter( &$pData, &$pFilterHash, $pObject ) {
 function cryptifier_postfilter( &$pData, &$pFilterHash, $pObject ) {
 	global $gBitSystem, $gBitThemes, $gBitSmarty;
 	if( $pObject->getPreference( 'cryptifier_cipher' ) ) {
+		$pObject->verifyUserPermission( 'p_cryptifier_decrypt_content' );
 		if( empty( $_REQUEST['cryptifier_cipher_key'] ) ) {
 			$gBitSmarty->assign_by_ref( 'gCryptContent', $pObject );
 			$pData = $gBitSmarty->fetch( "bitpackage:cryptifier/cryptifier_authenticate.tpl" );
@@ -73,25 +78,4 @@ function cryptifier_postfilter( &$pData, &$pFilterHash, $pObject ) {
 	}
 }
 
-/*
-function gatekeeper_authenticate( &$pInfo, $pFatalOnError = TRUE ) {
-	global $gBitSystem, $gBitSmarty;
-	$ret = FALSE;
-
-	if( empty( $_SESSION['gatekeeper_security'][$pInfo['security_id']] ) || ( $_SESSION['gatekeeper_security'][$pInfo['security_id']] != md5( $pInfo['access_answer'] ) ) ) {
-		if( !empty( $_REQUEST['try_access_answer'] ) && strtoupper( trim( $_REQUEST['try_access_answer'] ) ) == strtoupper( trim($pInfo['access_answer']) ) ) {
-			// we have a successful password entry. Set the session so we don't ask for it again
-			$_SESSION['gatekeeper_security'][$pInfo['security_id']] = md5( $pInfo['access_answer'] );
-		} else {
-			if( $pFatalOnError ) {
-				$gBitSystem->display("bitpackage:gatekeeper/authenticate.tpl", "Password Required" , array( 'display_mode' => 'display' ));
-				die;
-			} else {
-				$ret = '<h2>'.tra( "Password Required" ).'</h2>'.$gBitSmarty->fetch( "bitpackage:gatekeeper/authenticate.tpl" );
-			}
-		}
-	}
-	return $ret;
-}
-*/
 ?>
