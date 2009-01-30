@@ -41,8 +41,13 @@ if( $gBitSystem->isPackageActive( 'cryptifier' ) ) {
 	}
 
 	function cryptifier_content_verify( &$pContent, &$pParamHash ) {
-		if( !empty( $pParamHash['cryptifier_active'] ) && empty( $pParamHash['cryptifier_cipher_key'] ) ) {
-			$pContent->mErrors['cryptifier'] = "Empty encryption passwords are not valid.";
+		if( !empty( $pParamHash['cryptifier_active'] ) ) {
+			if( empty( $pParamHash['cryptifier_cipher_key'] ) ) {
+				$pContent->mErrors['cryptifier'] = "Empty encryption passwords are not valid.";
+			} else {
+				// no history for encrypted content
+				$pParamHash['has_no_history'] = TRUE;
+			}
 		}
 	}
 
