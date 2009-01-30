@@ -1,13 +1,5 @@
 {strip}
-<div class="floaticon">{bithelp}</div>
-
-<div class="admin liberty">
-	<div class="header">
-		<h1>{tr}Cryptifier Configuration{/tr}</h1>
-	</div>
-
-	<div class="body">
-		{form}
+		{form action=$smarty.server.REQUEST_URI}
 		{formfeedback hash=$feedback}
 		{legend legend="Filter Settings"}
 			<div class="row">
@@ -22,6 +14,4 @@
 			</div>
 		{/legend}
 		{/form}
-	</div><!-- end .body -->
-</div><!-- end .liberty-->
 {/strip}

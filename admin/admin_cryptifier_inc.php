@@ -25,6 +25,4 @@ if( !empty( $_POST ) ) {
 	$gBitSystem->storeConfig( 'cryptifier_default_cipher', $_REQUEST['cryptifier_default_cipher'] );
 }
 
-$gBitSystem->display( 'bitpackage:cryptifier/admin_filter_cryptifier.tpl', 'Cryptifier Configuration' );
-
 ?>

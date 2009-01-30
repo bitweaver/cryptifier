@@ -1,6 +1,6 @@
 <?php
 /**
- * @version  $Header: /cvsroot/bitweaver/_bit_cryptifier/liberty_plugins/filter.cryptifier.php,v 1.1 2009/01/30 15:13:29 spiderr Exp $
+ * @version  $Header: /cvsroot/bitweaver/_bit_cryptifier/liberty_plugins/filter.cryptifier.php,v 1.2 2009/01/30 17:21:02 spiderr Exp $
  * @package  liberty
  * @subpackage plugins_filter
  */
@@ -29,7 +29,7 @@ $pluginParams = array (
 	// type of plugin
 	'plugin_type'              => FILTER_PLUGIN,
 	// url to page with options for this plugin
-	'plugin_settings_url'      => CRYPTIFIER_PKG_URL.'admin/index.php',
+	'plugin_settings_url'      => KERNEL_PKG_URL.'admin/index.php?page=cryptifier',
 
 	// various filter functions and when they are called
 	// called before the data is parsed
@@ -43,6 +43,7 @@ $pluginParams = array (
 	// called before the data is saved
 	'prestore_function'	 => 'cryptifier_prestore',
 );
+
 $gLibertySystem->registerPlugin( PLUGIN_GUID_FILTERCRYPTIFIER, $pluginParams );
 
 function cryptifier_prestore( &$pData, &$pFilterHash, $pObject ) {
