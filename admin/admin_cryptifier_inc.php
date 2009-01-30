@@ -14,7 +14,7 @@ MCRYPT_SAFERPLUS => 'SaferPlus',
 MCRYPT_SKIPJACK => 'Skipjack',
 MCRYPT_THREEWAY => 'Threeway',
 MCRYPT_TRIPLEDES => 'TripleDES',
-MCRYPT_TWOFISH256 => 'TwoFish 256',
+MCRYPT_TWOFISH => 'TwoFish',
 MCRYPT_WAKE => 'Wake',
 MCRYPT_XTEA => 'Xtea',
 );
