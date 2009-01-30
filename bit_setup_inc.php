@@ -19,7 +19,8 @@ if( $gBitSystem->isPackageActive( 'cryptifier' ) ) {
 		'content_verify_function' => 'cryptifier_content_verify',
 		'content_store_function' => 'cryptifier_content_store',
 		'content_service_icons_tpl' => 'bitpackage:cryptifier/cryptifier_service_icons.tpl',
-		'content_edit_mini_tpl' => 'bitpackage:cryptifier/cryptifier_store_content.tpl'
+		'content_edit_mini_tpl' => 'bitpackage:cryptifier/cryptifier_store_content.tpl',
+		'content_body_tpl' => 'bitpackage:cryptifier/cryptifier_content_view.tpl',
 	) );
 
 	function cryptifier_content_display( &$pContent ) {
