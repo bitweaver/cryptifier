@@ -1,8 +1,8 @@
-{if $gBitUser->hasPermission('p_cryptifier_encrypt')}
+{if $gBitUser->hasPermission('p_cryptifier_encrypt_content')}
 <div class="row">
 	{formlabel label="Encrypt Data"}
 	{forminput}
-		<div><input type="checkbox" id="cryptifier_active" name="cryptifier_active" value="true" {if $gContent->getPreference('cryptifier_cipher')}checked="checked"{/if} onClick="updateCipherMenu();" /></div>
+		<div><input type="checkbox" id="cryptifier_active" name="cryptifier_active" value="true" {if $gContent->getPreference('cryptifier_cipher') || $smarty.request.cryptifier_active}checked="checked"{/if} onClick="updateCipherMenu();" /></div>
 	{/forminput}
 </div>
 <div class="row" id="cryptifiermenu" style="display:none">
