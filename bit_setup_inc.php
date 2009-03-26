@@ -27,33 +27,38 @@ if( $gBitSystem->isPackageActive( 'cryptifier' ) ) {
 	function cryptifier_content_display( &$pContent ) {
 		if( $pContent->getPreference( 'cryptifier_cipher' ) && $pContent->getPreference( 'cryptifier_scope' ) == 'blurb' ) {
 			if( !empty( $_REQUEST['cryptifier_cipher_key'] ) ) {
-				if( $encryptedBlurb = $pContent->mDb->getOne( "SELECT `encrypted_data` FROM `".BIT_DB_PREFIX."cryptifier_blurbs` WHERE `content_id`=?", array( $pContent->mContentId ) ) ) {
-					$pContent->mInfo['decrypted_blurb'] = cryptifier_decrypt_data( $encryptedBlurb, $pContent->getPreference( 'cryptifier_cipher' ), $_REQUEST['cryptifier_cipher_key'], $pContent->getPreference( 'cryptifier_iv' ) );			
-				}
+				$pContent->mInfo['decrypted_blurb'] = cryptifier_get_blurb( $pContent, $_REQUEST['cryptifier_cipher_key'] );
 			}
 		}
 	}
 
-	function cryptifier_content_expunge( &$pContent ) {
-		$pContent->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."cryptifier_blurbs` WHERE `content_id`=?", array( $pObject->mContentId ) );
+	function cryptifier_get_blurb( &$pContent, $pCipherKey ) {
+		if( $encryptedBlurb = $pContent->mDb->getOne( "SELECT `encrypted_data` FROM `".BIT_DB_PREFIX."cryptifier_blurbs` WHERE `content_id`=?", array( $pContent->mContentId ) ) ) {
+			$ret = cryptifier_decrypt_data( $encryptedBlurb, $pContent->getPreference( 'cryptifier_cipher' ), $pCipherKey, $pContent->getPreference( 'cryptifier_iv' ) );			
+		}
+		return $ret;
 	}
 
-	function cryptifier_content_edit( &$pObject ) {
-		global $gBitSystem, $gBitSmarty;
-		$pObject->verifyUserPermission( 'p_cryptifier_encrypt_content' );
+	function cryptifier_content_expunge( &$pContent ) {
+		$pContent->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."cryptifier_blurbs` WHERE `content_id`=?", array( $pContent->mContentId ) );
+	}
 
-		if( $pObject->getPreference( 'cryptifier_cipher' ) ) {
+	function cryptifier_content_edit( &$pContent ) {
+		global $gBitSystem, $gBitSmarty;
+		$pContent->verifyUserPermission( 'p_cryptifier_encrypt_content' );
+
+		if( $pContent->getPreference( 'cryptifier_cipher' ) ) {
 			if( !isset( $_REQUEST['cryptifier_cipher_key'] ) ) {
-				$gBitSmarty->assign_by_ref( 'gCryptContent', $pObject );
+				$gBitSmarty->assign_by_ref( 'gCryptContent', $pContent );
 				$gBitSystem->display( "bitpackage:cryptifier/cryptifier_authenticate.tpl", "Decryption Authenitication" );
 				die;
 			} else {
-				switch ( $pObject->getPreference( 'cryptifier_scope' ) ) {
+				switch ( $pContent->getPreference( 'cryptifier_scope' ) ) {
 					case 'all':
-						$pObject->mInfo['data'] = cryptifier_decrypt_data( $pObject->mInfo['data'], $pObject->getPreference( 'cryptifier_cipher' ), $_REQUEST['cryptifier_cipher_key'], $pObject->getPreference( 'cryptifier_iv' ) );			
+						$pContent->mInfo['data'] = cryptifier_decrypt_data( $pContent->mInfo['data'], $pContent->getPreference( 'cryptifier_cipher' ), $_REQUEST['cryptifier_cipher_key'], $pContent->getPreference( 'cryptifier_iv' ) );			
 						break;
 					case 'blurb':
-						$pObject->mInfo['decrypted_blurb'] = cryptifier_decrypt_data( $pObject->mInfo['encrypted_data'], $pObject->getPreference( 'cryptifier_cipher' ), $_REQUEST['cryptifier_cipher_key'], $pObject->getPreference( 'cryptifier_iv' ) );			
+						$pContent->mInfo['decrypted_blurb'] = cryptifier_get_blurb( $pContent, $_REQUEST['cryptifier_cipher_key'] );
 						break;
 				}
 			}

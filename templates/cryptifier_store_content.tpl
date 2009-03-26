@@ -22,7 +22,7 @@
 	<div class="row" id="cryptifierblurb" style="display:none">
 		{formlabel label="Encrypted Blurb"}
 		{forminput}
-			<textarea name="cryptifier_blurb"></textarea>
+			<textarea name="cryptifier_blurb">{$gContent->getField('decrypted_blurb')}</textarea>
 			{formhelp note="This password will NOT be stored. If it is forgotten, this data will be unrecoverable."}
 		{/forminput}
 	</div>
