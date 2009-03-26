@@ -18,14 +18,24 @@ if( $gBitSystem->isPackageActive( 'cryptifier' ) ) {
 		'content_edit_function' => 'cryptifier_content_edit',
 		'content_verify_function' => 'cryptifier_content_verify',
 		'content_store_function' => 'cryptifier_content_store',
+		'content_expunge_function' => 'cryptifier_content_expunge',
 		'content_service_icons_tpl' => 'bitpackage:cryptifier/cryptifier_service_icons.tpl',
 		'content_edit_mini_tpl' => 'bitpackage:cryptifier/cryptifier_store_content.tpl',
 		'content_body_tpl' => 'bitpackage:cryptifier/cryptifier_content_view.tpl',
 	) );
 
 	function cryptifier_content_display( &$pContent ) {
-		if( $pContent->getPreference( 'cryptifier_cipher' ) ) {
+		if( $pContent->getPreference( 'cryptifier_cipher' ) && $pContent->getPreference( 'cryptifier_scope' ) == 'blurb' ) {
+			if( !empty( $_REQUEST['cryptifier_cipher_key'] ) ) {
+				if( $encryptedBlurb = $pContent->mDb->getOne( "SELECT `encrypted_data` FROM `".BIT_DB_PREFIX."cryptifier_blurbs` WHERE `content_id`=?", array( $pContent->mContentId ) ) ) {
+					$pContent->mInfo['decrypted_blurb'] = cryptifier_decrypt_data( $encryptedBlurb, $pContent->getPreference( 'cryptifier_cipher' ), $_REQUEST['cryptifier_cipher_key'], $pContent->getPreference( 'cryptifier_iv' ) );			
+				}
+			}
 		}
+	}
+
+	function cryptifier_content_expunge( &$pContent ) {
+		$pContent->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."cryptifier_blurbs` WHERE `content_id`=?", array( $pObject->mContentId ) );
 	}
 
 	function cryptifier_content_edit( &$pObject ) {
@@ -38,7 +48,14 @@ if( $gBitSystem->isPackageActive( 'cryptifier' ) ) {
 				$gBitSystem->display( "bitpackage:cryptifier/cryptifier_authenticate.tpl", "Decryption Authenitication" );
 				die;
 			} else {
-				$pObject->mInfo['data'] = cryptifier_decrypt_data( $pObject->mInfo['data'], $pObject->getPreference( 'cryptifier_cipher' ), $_REQUEST['cryptifier_cipher_key'], $pObject->getPreference( 'cryptifier_iv' ) );			
+				switch ( $pObject->getPreference( 'cryptifier_scope' ) ) {
+					case 'all':
+						$pObject->mInfo['data'] = cryptifier_decrypt_data( $pObject->mInfo['data'], $pObject->getPreference( 'cryptifier_cipher' ), $_REQUEST['cryptifier_cipher_key'], $pObject->getPreference( 'cryptifier_iv' ) );			
+						break;
+					case 'blurb':
+						$pObject->mInfo['decrypted_blurb'] = cryptifier_decrypt_data( $pObject->mInfo['encrypted_data'], $pObject->getPreference( 'cryptifier_cipher' ), $_REQUEST['cryptifier_cipher_key'], $pObject->getPreference( 'cryptifier_iv' ) );			
+						break;
+				}
 			}
 		}
 	}
@@ -59,10 +76,21 @@ if( $gBitSystem->isPackageActive( 'cryptifier' ) ) {
 		if( !empty( $pParamHash['cryptifier_active'] ) ) {
 			$cipher = $gBitSystem->getConfig( 'cryptifier_default_cipher', 'blowfish' ); 
 			$iv = '';
-			$encryptedData = cryptifier_encrypt_data( $pParamHash['content_store']['data'], $cipher, $pParamHash['cryptifier_cipher_key'], $iv );
 			$pContent->storePreference( 'cryptifier_cipher', $cipher );
 			$pContent->storePreference( 'cryptifier_iv', $iv );
-			$pContent->mDb->query( "UPDATE `".BIT_DB_PREFIX."liberty_content` SET `data`=? WHERE `content_id`=? ", array( $encryptedData, $pContent->mContentId ) );
+			$gBitSystem->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."cryptifier_blurbs` WHERE `content_id`=?", array( $pContent->mContentId ) );
+			if( $_REQUEST['cryptifier_scope'] == 'blurb' && !empty( $_REQUEST['cryptifier_blurb'] ) ) {
+					$encryptedData = cryptifier_encrypt_data( $pParamHash['content_store']['data'], $cipher, $pParamHash['cryptifier_cipher_key'], $iv );
+					$gBitSystem->mDb->query( "INSERT INTO `".BIT_DB_PREFIX."cryptifier_blurbs` (`content_id`, `encrypted_data` ) VALUES( ?,? )", array( $pContent->mContentId, $encryptedData ) );
+			} elseif( $_REQUEST['cryptifier_scope'] == 'all' ) {
+				$encryptedData = cryptifier_encrypt_data( $pParamHash['content_store']['data'], $cipher, $pParamHash['cryptifier_cipher_key'], $iv );
+				$pContent->mDb->query( "UPDATE `".BIT_DB_PREFIX."liberty_content` SET `data`=? WHERE `content_id`=? ", array( $encryptedData, $pContent->mContentId ) );
+			}
+			$pContent->storePreference( 'cryptifier_scope', $_REQUEST['cryptifier_scope'] );
+		} else {
+			$pContent->storePreference( 'cryptifier_cipher', NULL );
+			$pContent->storePreference( 'cryptifier_iv', NULL );
+			$pContent->storePreference( 'cryptifier_scope', NULL );
 		}
 	}
 
