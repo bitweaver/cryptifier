@@ -1,0 +1,16 @@
+
+
+form.cryptifierauth,
+#cryptifieredit,
+.cryptifiernotice {
+	padding:16px;
+	background-color:#FdFeC3;
+	border:1px solid red;
+	margin-bottom:10px;
+}
+form.cryptifierauth img {
+	margin-top:-16px;
+}
+div.cryptifiernotice img {
+	margin-top:-8px;
+}

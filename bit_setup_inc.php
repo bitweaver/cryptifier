@@ -1,5 +1,5 @@
 <?php
-global $gBitSystem;
+global $gBitSystem, $gBitThemes;
 
 define( 'LIBERTY_SERVICE_CRYPTIFIER', 'Cryptogrphy' );
 
@@ -23,6 +23,8 @@ if( $gBitSystem->isPackageActive( 'cryptifier' ) ) {
 		'content_edit_mini_tpl' => 'bitpackage:cryptifier/cryptifier_store_content.tpl',
 		'content_body_tpl' => 'bitpackage:cryptifier/cryptifier_content_view.tpl',
 	) );
+
+	$gBitThemes->loadCss( CRYPTIFIER_PKG_PATH.'css/cryptifier.css' );	
 
 	include_once( 'cryptifier_lib.php' );
 }
