@@ -1,6 +1,6 @@
 <?php
 /**
- * @version  $Header: /cvsroot/bitweaver/_bit_cryptifier/liberty_plugins/filter.cryptifier.php,v 1.4 2009/03/26 14:31:28 spiderr Exp $
+ * @version  $Header: /cvsroot/bitweaver/_bit_cryptifier/liberty_plugins/filter.cryptifier.php,v 1.5 2009/03/31 15:39:24 spiderr Exp $
  * @package  liberty
  * @subpackage plugins_filter
  */
@@ -55,12 +55,9 @@ function cryptifier_prefilter( &$pData, &$pFilterHash, $pObject ) {
 	// Decrypt the content if needed and able
 
 	if( $pObject->getPreference( 'cryptifier_cipher' ) && $pObject->getPreference( 'cryptifier_scope' ) == 'all' ) {
+		$pObject->verifyUserPermission( 'p_cryptifier_decrypt_content' );
 		if( !empty( $_REQUEST['cryptifier_cipher_key'] ) ) {
-			if( $pObject->hasUserPermission( 'p_cryptifier_decrypt_content' ) ) {
-				$pData = cryptifier_decrypt_data( $pData, $pObject->getPreference( 'cryptifier_cipher' ), $_REQUEST['cryptifier_cipher_key'], $pObject->getPreference( 'cryptifier_iv' ) );			
-			} else {
-				$pData = tra( 'You do not have permission to decrypt data.' );
-			}
+			$pData = cryptifier_decrypt_data( $pData, $pObject->getPreference( 'cryptifier_cipher' ), $_REQUEST['cryptifier_cipher_key'], $pObject->getPreference( 'cryptifier_iv' ) );			
 		} else {
 			$pData = '';
 		}
@@ -71,7 +68,7 @@ function cryptifier_postfilter( &$pData, &$pFilterHash, $pObject ) {
 	global $gBitSystem, $gBitThemes, $gBitSmarty;
 	if( $pObject->getPreference( 'cryptifier_cipher' ) && $pObject->getPreference( 'cryptifier_scope' ) == 'all' ) {
 		$pObject->verifyUserPermission( 'p_cryptifier_decrypt_content' );
-		if( $encrypted_data && empty( $_REQUEST['cryptifier_cipher_key'] ) ) {
+		if( empty( $_REQUEST['cryptifier_cipher_key'] ) ) {
 			$gBitSmarty->assign_by_ref( 'gCryptContent', $pObject );
 			$pData = $gBitSmarty->fetch( "bitpackage:cryptifier/cryptifier_authenticate.tpl" );
 		}
