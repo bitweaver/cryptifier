@@ -15,8 +15,8 @@
 	{formlabel label="Encryption Scope"}
 	{forminput}
 	<select name="cryptifier_scope" id="cryptifierscope" onchange="updateCryptifierScope();">
-		<option value="all">{tr}Entire Page{/tr}</option>
 		<option value="blurb" {if $gContent->getPreference('cryptifier_scope')=='blurb'}selected="selected"{/if}>{tr}Short Blurb{/tr}</option>
+		<option value="all" {if $gContent->getPreference('cryptifier_scope')=='all'}selected="selected"{/if}>{tr}Entire Page{/tr}</option>
 	</select>
 	{/forminput}
 	<div class="row" id="cryptifierblurb" style="display:none">
