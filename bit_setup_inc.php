@@ -21,7 +21,7 @@ if( $gBitSystem->isPackageActive( 'cryptifier' ) ) {
 		'content_expunge_function' => 'cryptifier_content_expunge',
 		'content_service_icons_tpl' => 'bitpackage:cryptifier/cryptifier_service_icons.tpl',
 		'content_edit_mini_tpl' => 'bitpackage:cryptifier/cryptifier_store_content.tpl',
-		'content_body_tpl' => 'bitpackage:cryptifier/cryptifier_content_view.tpl',
+		'content_view_tpl' => 'bitpackage:cryptifier/cryptifier_content_view.tpl',
 	) );
 
 	$gBitThemes->loadCss( CRYPTIFIER_PKG_PATH.'css/cryptifier.css' );	
