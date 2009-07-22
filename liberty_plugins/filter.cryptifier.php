@@ -1,6 +1,6 @@
 <?php
 /**
- * @version  $Header: /cvsroot/bitweaver/_bit_cryptifier/liberty_plugins/filter.cryptifier.php,v 1.7 2009/07/22 16:07:05 spiderr Exp $
+ * @version  $Header: /cvsroot/bitweaver/_bit_cryptifier/liberty_plugins/filter.cryptifier.php,v 1.8 2009/07/22 17:57:49 spiderr Exp $
  * @package  liberty
  * @subpackage plugins_filter
  */
@@ -11,11 +11,6 @@
 define( 'PLUGIN_GUID_FILTERCRYPTIFIER', 'filtercryptifier' );
 
 global $gLibertySystem;
-
-// Set of default acceptable HTML tags
-define( 'DEFAULT_ACCEPTABLE_TAGS', '<a><br><b><blockquote><cite><code><div><dd><dl><dt><em><h1><h2><h3><h4><hr>'
-		.'<i><it><img><li><ol><p><pre><span><strong><table><tbody><div><tr><td><th><u><ul>'
-		.'<button><fieldset><form><label><input><option><select><textarea>' );
 
 $pluginParams = array (
 	// plugin title
