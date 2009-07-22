@@ -1,6 +1,6 @@
 <?php
 /**
- * @version  $Header: /cvsroot/bitweaver/_bit_cryptifier/liberty_plugins/filter.cryptifier.php,v 1.6 2009/05/01 14:06:52 spiderr Exp $
+ * @version  $Header: /cvsroot/bitweaver/_bit_cryptifier/liberty_plugins/filter.cryptifier.php,v 1.7 2009/07/22 16:07:05 spiderr Exp $
  * @package  liberty
  * @subpackage plugins_filter
  */
@@ -66,7 +66,7 @@ function cryptifier_prefilter( &$pData, &$pFilterHash, $pObject ) {
 
 function cryptifier_postfilter( &$pData, &$pFilterHash, $pObject ) {
 	global $gBitSystem, $gBitThemes, $gBitSmarty;
-	if( $pObject->getPreference( 'cryptifier_cipher' ) && $pObject->getPreference( 'cryptifier_scope' ) == 'all' ) {
+	if( $pObject && $pObject->getPreference( 'cryptifier_cipher' ) && $pObject->getPreference( 'cryptifier_scope' ) == 'all' ) {
 		$pObject->verifyUserPermission( 'p_cryptifier_decrypt_content' );
 		if( empty( $_REQUEST['cryptifier_cipher_key'] ) ) {
 			$gBitSmarty->assign_by_ref( 'gCryptContent', $pObject );
