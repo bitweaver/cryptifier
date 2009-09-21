@@ -1,4 +1,5 @@
 {if $gBitUser->hasPermission('p_cryptifier_encrypt_content')}
+	 {if $smarty.request.cryptifier_cipher_key || !$gContent->getPreference('cryptifier_scope')}
 <div class="row">
 	{formlabel label="Encrypt Data"}
 	{forminput}
@@ -47,4 +48,13 @@ updateCipherMenu();
 updateCryptifierScope();
 {/literal}
 //]]></script>
+	{elseif $gContent->getPreference('cryptifier_scope')}
+<div class="row" id="cryptifieredit">
+	{formlabel label="Encrypted data"}
+	{forminput}
+ 		This page has an encrypted blurb, however you did not enter the password to decrypt it. It will remain unchanged.
+		<input type="hidden" name="skip_decrypt" value="1"/>
+	{/forminput}
+</div>
+	{/if}
 {/if}

@@ -32,13 +32,15 @@
 	function cryptifier_content_edit( &$pContent ) {
 		global $gBitSystem, $gBitSmarty;
 		$pContent->verifyUserPermission( 'p_cryptifier_encrypt_content' );
-
 		if( $pContent->getPreference( 'cryptifier_cipher' ) ) {
-			if( !isset( $_REQUEST['cryptifier_cipher_key'] ) ) {
+			if( !empty( $_REQUEST['skip_decrypt'] ) && $pContent->getPreference('cryptifier_scope') != 'all' ) {
+				// do nothing, skip crypto
+			} elseif( !isset( $_REQUEST['cryptifier_cipher_key'] ) ) {
 				$gBitSmarty->assign_by_ref( 'gCryptContent', $pContent );
 				$gBitSystem->display( "bitpackage:cryptifier/cryptifier_authenticate.tpl", "Decryption Authenitication" );
 				die;
 			} else {
+				// we have a non-blank cipher
 				switch ( $pContent->getPreference( 'cryptifier_scope' ) ) {
 					case 'all':
 						$pContent->mInfo['data'] = cryptifier_decrypt_data( $pContent->mInfo['data'], $pContent->getPreference( 'cryptifier_cipher' ), $_REQUEST['cryptifier_cipher_key'], $pContent->getPreference( 'cryptifier_iv' ) );			
@@ -64,13 +66,15 @@
 
 	function cryptifier_content_store( &$pContent, &$pParamHash ) {
 		global $gBitSystem;
-		if( !empty( $pParamHash['cryptifier_active'] ) ) {
+		if( !empty( $pParamHash['skip_decrypt'] ) ) {
+			// do nothing, status quo
+		} elseif( !empty( $pParamHash['cryptifier_active'] ) ) {
 			$cipher = $gBitSystem->getConfig( 'cryptifier_default_cipher', 'blowfish' ); 
 			$iv = '';
 			$pContent->storePreference( 'cryptifier_cipher', $cipher );
 			$gBitSystem->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."cryptifier_blurbs` WHERE `content_id`=?", array( $pContent->mContentId ) );
 			if( $_REQUEST['cryptifier_scope'] == 'blurb' && !empty( $_REQUEST['cryptifier_blurb'] ) ) {
-					$encryptedData = cryptifier_encrypt_data( $_REQUEST['cryptifier_blurb'], $cipher, $pParamHash['cryptifier_cipher_key'], $iv );
+				$encryptedData = cryptifier_encrypt_data( $_REQUEST['cryptifier_blurb'], $cipher, $pParamHash['cryptifier_cipher_key'], $iv );
 					$gBitSystem->mDb->query( "INSERT INTO `".BIT_DB_PREFIX."cryptifier_blurbs` (`content_id`, `encrypted_data` ) VALUES( ?,? )", array( $pContent->mContentId, $encryptedData ) );
 			} elseif( $_REQUEST['cryptifier_scope'] == 'all' ) {
 				$encryptedData = cryptifier_encrypt_data( $pParamHash['content_store']['data'], $cipher, $pParamHash['cryptifier_cipher_key'], $iv );

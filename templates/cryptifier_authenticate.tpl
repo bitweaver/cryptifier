@@ -20,6 +20,10 @@
 		{forminput}
 			<input type="password" name="cryptifier_cipher_key" value="" maxlength="128" size="50"/>
 			<input type="submit" name="submit_answer" value="Submit"/>
+			{if $gContent->getPreference('cryptifier_scope') != 'all'}
+			<input type="submit" name="skip_decrypt" value="Skip"/>
+			{/if}
+		{formhelp note="If you are unsure of the password, you can skip this page. However, you will not be able to view or edit encrypted information."}
 		{/forminput}
 	</div>
 	{/form}
