@@ -1,5 +1,15 @@
 <?php
 
+	function cryptifier_get_encrypted_blurbs() {
+		global $gBitDb;
+		return $gBitDb->getAssoc( "SELECT lc.`content_id` AS `hash_key`, lc.* FROM `".BIT_DB_PREFIX."cryptifier_blurbs` cb INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON (lc.`content_id`=cb.`content_id`) " );
+	}
+
+	function cryptifier_get_encrypted_content() {
+		global $gBitDb;
+		return $gBitDb->getAssoc( "SELECT lc.`content_id` AS `hash_key`, lc.* FROM  `".BIT_DB_PREFIX."liberty_content` lc INNER JOIN `".BIT_DB_PREFIX."liberty_content_prefs` lcp ON (lc.`content_id`=lcp.`content_id`) WHERE lcp.`pref_name`='cryptifier_scope' AND lcp.`pref_value`!='blurb' " );
+	}
+
 	function cryptifier_content_display( &$pContent ) {
 		if( $pContent->getPreference( 'cryptifier_cipher' ) && $pContent->getPreference( 'cryptifier_scope' ) == 'blurb' ) {
 			if( !empty( $_REQUEST['cryptifier_cipher_key'] ) ) {
