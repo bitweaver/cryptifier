@@ -1,6 +1,6 @@
 <?php
 
-require_once( '../../bit_setup_inc.php' );
+require_once( '../../kernel/setup_inc.php' );
 
 // only admins may use this page
 $gBitSystem->verifyPermission( 'p_cryptifier_admin' );
