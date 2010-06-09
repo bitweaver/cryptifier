@@ -1,6 +1,6 @@
 <?php
 /**
- * @version  $Header: /cvsroot/bitweaver/_bit_cryptifier/liberty_plugins/filter.cryptifier.php,v 1.8 2009/07/22 17:57:49 spiderr Exp $
+ * @version  $Header$
  * @package  liberty
  * @subpackage plugins_filter
  */
