@@ -6,7 +6,7 @@ $tables = array(
 		content_id I4 NOTNULL PRIMARY,
 		encrypted_data X NOTNULL
 		CONSTRAINT '
-			, CONSTRAINT `meta_associations_content_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )
+			, CONSTRAINT `cryptifier_blurbs_content_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )
 		'
 	",
 );
