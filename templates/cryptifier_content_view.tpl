@@ -19,7 +19,7 @@
 			<img src='{$smarty.const.CRYPTIFIER_PKG_URL}icons/shield_key.png' alt='' style='margin-bottom:-8px;width:24px;'/>
 			{tr}This page contains encrypted data.{/tr} <strong>{tr}Enter password{/tr}</strong>
 			<input type="password" name="cryptifier_cipher_key" value="" maxlength="128" />
-			<input type="submit" name="submit_answer" value="Submit"/>
+			<input type="submit" class="btn" name="submit_answer" value="Submit"/>
 		{/form}
 	{/if}
 {/if}
