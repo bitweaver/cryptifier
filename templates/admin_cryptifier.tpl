@@ -10,7 +10,7 @@
 				{/forminput}
 			</div>
 			<div class="control-group submit">
-				<input type="submit" class="btn" name="change_prefs" value="{tr}Save{/tr}" />
+				<input type="submit" class="btn btn-default" name="change_prefs" value="{tr}Save{/tr}" />
 			</div>
 		{/legend}
 		{/form}
