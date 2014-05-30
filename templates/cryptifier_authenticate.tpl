@@ -6,7 +6,7 @@
 	{form action=$smarty.server.REQUEST_URI class="cryptifierauth"}
 	<input type="hidden" name="content_id" value="{$gCryptContent->mContentId}" />
 
-	<div class="control-group">
+	<div class="form-group">
 		<div class="formlabel">
 			<img src='{$smarty.const.CRYPTIFIER_PKG_URL}icons/shield_key.png' alt='' style='width:48px;'/>
 		</div>
@@ -15,7 +15,7 @@
 		{/forminput}
 	</div>
 <div class="clear:both">&nbsp;</div>
-	<div class="control-group">
+	<div class="form-group">
 		{formlabel label="Enter Password" for="try-access-answer"}
 		{forminput}
 			<input type="password" name="cryptifier_cipher_key" value="" maxlength="128" size="50"/>

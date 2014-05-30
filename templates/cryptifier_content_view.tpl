@@ -5,7 +5,7 @@
 			{tr}The following information was stored as encrypted data. If the data is unreadable, the incorrect password was entered.{/tr}
 			{if  $gContent->getPreference('cryptifier_scope') == 'blurb'}
 				<div class="clear">
-				<div class="control-group">
+				<div class="form-group">
 					{formlabel label="Decrypted Information"}
 					{forminput}
 						{$gContent->getField('decrypted_blurb')}
