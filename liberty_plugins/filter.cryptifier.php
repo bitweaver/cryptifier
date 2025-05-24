@@ -64,7 +64,7 @@ function cryptifier_postfilter( &$pData, &$pFilterHash, $pObject ) {
 	if( $pObject && $pObject->getPreference( 'cryptifier_cipher' ) && $pObject->getPreference( 'cryptifier_scope' ) == 'all' ) {
 		$pObject->verifyUserPermission( 'p_cryptifier_decrypt_content' );
 		if( empty( $_REQUEST['cryptifier_cipher_key'] ) ) {
-			$gBitSmarty->assign_by_ref( 'gCryptContent', $pObject );
+			$gBitSmarty->assignByRef( 'gCryptContent', $pObject );
 			$pData = $gBitSmarty->fetch( "bitpackage:cryptifier/cryptifier_authenticate.tpl" );
 		}
 	}

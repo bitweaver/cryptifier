@@ -36,7 +36,7 @@
 			if( !empty( $_REQUEST['skip_decrypt'] ) && $pContent->getPreference('cryptifier_scope') != 'all' ) {
 				// do nothing, skip crypto
 			} elseif( !isset( $_REQUEST['cryptifier_cipher_key'] ) ) {
-				$gBitSmarty->assign_by_ref( 'gCryptContent', $pContent );
+				$gBitSmarty->assignByRef( 'gCryptContent', $pContent );
 				$gBitSystem->display( "bitpackage:cryptifier/cryptifier_authenticate.tpl", "Decryption Authenitication" );
 				die;
 			} else {
